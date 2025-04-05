@@ -1,32 +1,129 @@
 <% include ./partials/header.ejs %>
 
 
-<div class="w-full min-h-screen px-2 sm:px-5 py-2 flex flex-col gap-10">
+  <div class="w-full min-h-screen px-2 sm:px-5 py-2 flex flex-col gap-4 sm:gap-10">
+    <!-- header -->
+    <div>
+      <div class=" flex md:justify-around justify-between items-center">
+        <h2 class="font-semibold text-xl self-end">Create Pin</h2>
+        <button type="submit" id="publish" disabled form="pinform"
+          class="opacity-20 hover:bg-red-600 bg-red-700 text-white rounded-full font-semibold tracking-wide px-3 py-1 sm:px-5 sm:py-2">Publish</button>
+      </div>
+      <hr class=" border-t-1 border-gray-400 rounded-full mt-4">
+    </div>
 
-  <div>
-  <h2 class="font-semibold text-xl text-zinc-800 ">Create Pin</h2>
-  <hr class=" border-t-1 border-gray-400 rounded-full mt-4">
+    <div class=" w-full min-h-screen p-2 ">
+
+      <!-- form  -->
+      <form id="pinform" class="flex flex-col md:flex-row gap-5 justify-center max-w-[400px] md:max-w-[900px] mx-auto" action="/createpin"
+        method="post" enctype="multipart/form-data">
+
+       <!-- hidden input file -->
+      <input name="pinimage" type="file" id="pinInput" hidden onchange="previewImage(event)">
+
+
+        <!-- pin upload container -->
+        <label id="pinlabel" for="pinInput"
+          class="cursor-pointer w-full shadow-md flex flex-col gap-2 justify-center items-center max-w-sm h-80 sm:h-96 bg-gray-200 mx-auto rounded-3xl">
+          <span class="w-14 h-14 "><svg class="w-[100%] h-[100%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12H16L12 8L8 12H11V16H13V12Z">
+              </path>
+            </svg></span>
+          <p class="text-center text-zinc-600 font-medium">Choose a file to upload</p>
+        </label>
+
+        <!-- pin preview container -->
+        <div id="previewDIV"
+          class=" relative hidden shadow-md w-auto h-auto sm:max-md sm:max-h-md md:max-w-lg md:max-h-lg bg-gray-200 mx-auto rounded-3xl overflow-hidden">
+          <span onclick="removeImg()" class="cursor-pointer absolute top-2 right-2  w-7 h-7 sm:w-9 sm:h-9"><svg class="w-full h-full"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 10.5858L9.17157 7.75736L7.75736 9.17157L10.5858 12L7.75736 14.8284L9.17157 16.2426L12 13.4142L14.8284 16.2426L16.2426 14.8284L13.4142 12L16.2426 9.17157L14.8284 7.75736L12 10.5858Z">
+              </path>
+            </svg></span>
+          <img class="w-full h-full object-cover" id="preview">
+        </div>
+
+        <!-- pin inputs div -->
+        <div id="pininputs" class="flex flex-col gap-1 w-full opacity-20">
+          <label class="block font-medium " for="pintitle">Title</label>
+          <input disabled
+            name="pintitle"
+            class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 rounded-xl border-[1px] border-solid border-gray-500  px-3 py-2 font-semibold"
+            type="text" id="pintitle" placeholder="Add a title" >
+          <label class="block font-medium " for="description">Description</label>
+          <textarea disabled
+            name="pindescription"
+            class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 max-h-[10vh] rounded-xl border-[1px] border-solid border-gray-500 px-3 py-2"
+            id="description" placeholder="Add a detailed description"></textarea>
+          <label class="block font-medium " for="link">Link</label>
+          <input disabled
+          name="link"
+            class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 rounded-xl border-[1px] border-solid border-gray-500 px-3 py-2"
+            type="text" id="link" placeholder="Add a link">
+          <label class="block font-medium " for="tag">Tagged topics (0)</label>
+          <input disabled
+            name="tags"
+            class=" focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 rounded-xl border-[1px] border-solid border-gray-500 px-3 py-2"
+            type="text" id="tag" placeholder="Search for a tag">
+        </div>
+
+      </form>
+    </div>
+
   </div>
 
-  <div class=" w-full min-h-screen p-2">
-    <form  action="" method="post" enctype="multipart/form-data">
-      <div class=" max-w-sm h-80 sm:h-96 bg-gray-200 mx-auto rounded-3xl">
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12H16L12 8L8 12H11V16H13V12Z"></path></svg>
-        <p>Choose a file to upload</p> -->
-      </div>
-      <div class="flex flex-col gap-1">
-        <label class="block font-medium " for="pintitle">Title</label>
-        <input class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 rounded-xl border-[1px] border-solid border-gray-500  px-3 py-2" type="text" id="pintitle" placeholder="Add a title">
-        <label class="block font-medium " for="description">Description</label>
-        <textarea class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 max-h-[10vh] rounded-xl border-[1px] border-solid border-gray-500 px-3 py-2" type="text" id="description" placeholder="Add a detailed description"></textarea>
-        <label class="block font-medium " for="tag">Tagged topics (0)</label>
-        <input class="focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 rounded-xl border-[1px] border-solid border-gray-500 px-3 py-2" type="text" id="tag" placeholder="Search for a tag">
-      </div>
-    </form>
-  </div>
-
-</div>
 
 
+  <script>
+     function previewImage(e) {
+      let pinDiv =  document.querySelector('#pininputs');
+      let publishbtn = document.querySelector('#publish');
 
-<% include ./partials/footer.ejs %>
+      let file = e.target.files[0];
+      if(file) {
+        let preview = document.getElementById('preview');
+        preview.src = URL.createObjectURL(file);
+        document.getElementById('pinlabel').classList.add('hidden');
+        document.getElementById('previewDIV').classList.remove('hidden');
+
+        pinDiv.classList.remove('opacity-20');
+        Array.from(pinDiv.querySelectorAll('input, textarea')).forEach(ele => {
+        ele.disabled = false;
+        publishbtn.classList.remove('opacity-20');
+        publishbtn.disabled = false;
+      })
+      }
+      else{
+      publishbtn.classList.add('opacity-20');
+      publishbtn.disabled = true
+      pinDiv.classList.add('opacity-20');
+      Array.from(pinDiv.querySelectorAll('input, textarea')).forEach(ele => {
+        ele.disabled = true;
+      })
+      }
+    }
+
+    function removeImg() {
+      let pinDiv =  document.querySelector('#pininputs');
+      let publishbtn = document.querySelector('#publish');
+      
+      document.querySelector('#pinInput').value = ''
+      document.querySelector('#preview').src = '';
+      document.getElementById('previewDIV').classList.add('hidden');
+      document.getElementById('pinlabel').classList.remove('hidden');
+
+      publishbtn.classList.add('opacity-20');
+      publishbtn.disabled = true
+      pinDiv.classList.add('opacity-20');
+      Array.from(pinDiv.querySelectorAll('input, textarea')).forEach(ele => {
+        ele.disabled = true;
+      })
+      
+    }
+  </script>
+
+
+  <% include ./partials/footer.ejs %>

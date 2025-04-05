@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const pinSchema = new mongoose.Schema({
-    pinimage : String,
+    pinimage : {
+        type : String,
+        default : '',
+     },
     pintitle : {type : String, trim : true},
     pindescription : {type : String, trim : true},
     user : {
@@ -9,9 +12,10 @@ const pinSchema = new mongoose.Schema({
         ref : 'user',
     },
     tags : [{
-        type : stringify,
+        type : String,
         trim : true,
-    }]
+    }],
+    link : String,
 
 })
 

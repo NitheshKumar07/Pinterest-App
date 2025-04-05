@@ -4,6 +4,7 @@ var router = express.Router();
 const localStrategy = require('passport-local');
 const passport = require('passport');
 const upload = require('../middleware/multer');
+const pinSchema = require('../models/pinSchema');
 
 passport.use(new localStrategy(userSchema.authenticate()));
 
@@ -37,8 +38,17 @@ router.post('/uploaddp', isLoggedIn, upload.single('dpimage'), async function(re
 });
 
 
-router.post('/createpin', isLoggedIn, upload.single('pinimage'), function(req, res, next) {
-
+router.post('/createpin', isLoggedIn, upload.single('pinimage'), async function(req, res, next) {
+  const user = await userSchema.findOne({username : req.session.passport.user});
+  const newpin = await pinSchema.create({
+    pinimage: req.file.filename,
+    pintitle: req.body.pintitle,
+    pindescription: req.body.pindescription,
+    user: user._id,
+    link: req.body.link,
+  })
+  user.pins.push(newpin._id);
+  await user.save();
   res.send('pin created');
 });
 
