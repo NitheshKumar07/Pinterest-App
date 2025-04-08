@@ -12,8 +12,32 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+router.get('/feed', async function(req, res) {
+  const pins = await pinSchema.find().populate('user');
+  res.render('feed', {pins});
+});
+
+router.get('/feed/:title?/:id', async function(req, res) {
+  try{
+    const query = {_id : req.params.id};
+    if(req.params.title){
+      query.pintitle = req.params.title;
+    }
+  
+    const pin = await pinSchema.findOne(query).populate('user');
+    console.log(pin)
+    const pins = await pinSchema.find().populate('user');
+    res.render('solofeed', {pin, pins});  
+  }
+  catch(err){
+    res.status(500).json({error : err})
+  }
+ 
+});
+
 router.get('/profile', isLoggedIn, async function(req, res) {
   const user = await userSchema.findOne({username : req.session.passport.user});
+  await user.populate('pins');
   res.render('profile', {user});
 });
 

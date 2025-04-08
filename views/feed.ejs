@@ -1,0 +1,100 @@
+<% include ./partials/header.ejs %>
+
+<div class="w-[95%] mx-auto min-h-screen columns-2 sm:columns-3 md:columns-4 lg:columns-6 gap-5">
+
+    <% if(pins.length <0 ){ %>
+        <h2 class="m-auto w-full h-full">No pins to show</h2>
+    <% } %>
+
+    <% pins.forEach(pin => { %>
+        <div  class="relative cursor-pointer mb-2 sm:mb-5 shadow-sm rounded-2xl overflow-hidden w-full break-inside-avoid group">
+            <a href="/feed<% if(pin.pintitle){%>/<%= encodeURIComponent(pin.pintitle) %><%}%>/<%= pin._id %>">
+                <img class="w-full h-full object-cover md:group-hover:brightness-50" src="/images/uploads/<%= pin.pinimage %>" alt="<%= pin.pintitle %>">
+            </a>
+           <div class="opacity-0 md:group-hover:opacity-100">
+             <div class="absolute top-2 right-2">
+            <div class="">
+                <button onclick="toggleboadrs(this)" class=" relative hover:bg-red-700 bg-[#E60023] text-white rounded-full font-semibold tracking-wide px-2 py-1 sm:px-3 sm:py-1">Save</button>
+                <div  class="savedropdn z-10 hidden absolute shadow-md max-h-[20vh] overflow-y-auto rounded-lg top-10 right-0  flex flex-col bg-white p-1  w-[100px] lg:w-[150px]">
+                    <a class="hover:bg-black hover:text-white rounded-lg p-1" href=""><p class="line-clamp-2">hello fashion & designers with nitesh</p></a>
+                    <a class="hover:bg-black hover:text-white rounded-lg p-1" href=""><p class="line-clamp-2">cars</p></a>
+                    <a class="hover:bg-black hover:text-white rounded-lg p-1" href=""><p class="line-clamp-2">vehivles</p></a>
+                </div>
+            </div>
+        </div>        
+            <% if(pin.link){ %>
+                <a href="<%= pin.link %>" target="_blank" class="absolute bottom-2 left-2 text-xs sm:text-base sm:flex justify-between items-center px-2 bg-white flex justify-center gap-1 items-center hover:bg-slate-100 rounded-full font-medium tracking-wide  py-1">
+                    <span class="w-5 h-5 block"><svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.0037 9.41421L7.39712 18.0208L5.98291 16.6066L14.5895 8H7.00373V6H18.0037V17H16.0037V9.41421Z"></path></svg></span>
+                    <span>Visit site</span>
+                </a>
+            <% } %>
+            <span class="  absolute bottom-2 right-2 text-xs sm:text-base sm:flex justify-between items-center cursor-pointer w-7 h-7 block  "><svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path></svg></span>       
+    </div>
+    
+        </div>
+    <% })%>
+
+    
+
+</div>
+
+
+
+
+
+<script>
+
+// toggle save pin btn
+    function toggleboadrs(btn){
+        const currentbtn = btn.nextElementSibling;
+
+        document.querySelectorAll('.savedropdn').forEach(e => {
+            if(e !== currentbtn){
+                e.classList.add('hidden');
+            }
+        })
+
+        currentbtn.classList.toggle('hidden');
+    }
+// close boards dropdown when clicked somewhere on body
+    document.addEventListener('click', (e) => {
+        const issavebutton = e.target.matches('button');
+        const insidedropdown = e.target.closest('.savedropdn');
+
+        if(!issavebutton && !insidedropdown){
+            document.querySelectorAll('.savedropdn').forEach(element => {
+                element.classList.add('hidden');
+            });
+        }
+    })
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<% include ./partials/footer.ejs %>

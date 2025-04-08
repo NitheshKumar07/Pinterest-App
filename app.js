@@ -11,6 +11,7 @@ const passport = require('passport');
 const usermodel = require('./models/userSchema');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 
 var app = express();
 
@@ -20,6 +21,7 @@ mongoose.connect("mongodb://localhost:27017/database")
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(bodyParser.json());
 
 app.use(expressSession({
   resave : false,
