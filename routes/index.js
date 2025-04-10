@@ -3,7 +3,7 @@ const userSchema = require('../models/userSchema');
 var router = express.Router();
 const localStrategy = require('passport-local');
 const passport = require('passport');
-const upload = require('../middleware/multer');
+const {uploaddp, uploadpin} = require('../middleware/multer')
 const pinSchema = require('../models/pinSchema');
 
 passport.use(new localStrategy(userSchema.authenticate()));
@@ -18,22 +18,33 @@ router.get('/feed', async function(req, res) {
 });
 
 router.get('/feed/:title?/:id', async function(req, res) {
-  try{
-    const query = {_id : req.params.id};
-    if(req.params.title){
-      query.pintitle = req.params.title;
-    }
-  
-    const pin = await pinSchema.findOne(query).populate('user');
-    console.log(pin)
-    const pins = await pinSchema.find().populate('user');
-    res.render('solofeed', {pin, pins});  
+ try{
+  const query = {_id : req.params.id};
+  if(req.params.title){
+    query.pintitle = req.params.title;
   }
-  catch(err){
-    res.status(500).json({error : err})
+
+  const pin = await pinSchema.findOne(query).populate('user');
+
+  const findingtags = pin.tags.map( tag => tag.toLowerCase());
+
+  const pintags = await pinSchema.find({
+    tags : {$in : findingtags},
+    _id : {$ne : pin._id}
+  }).populate('user');
+
+  pintags.sort((a,b) => {
+    const apin = a.tags.filter(atag => findingtags.includes(atag)).length;
+    const bpin = b.tags.filter(btag =>  findingtags.includes(btag)).length;
+    return bpin-apin;
+  })
+  res.render('solofeed', {pin, pintags});
+} 
+  catch (err) {
+    res.status(500).json({error : err});
   }
- 
 });
+
 
 router.get('/profile', isLoggedIn, async function(req, res) {
   const user = await userSchema.findOne({username : req.session.passport.user});
@@ -49,31 +60,32 @@ router.get('/register', function(req, res, next) {
   res.render('register');
 });
 
-router.get('/createpin', function(req, res, next) {
+router.get('/createpin', isLoggedIn, function(req, res, next) {
   res.render('createpin');
 });
 
 
-router.post('/uploaddp', isLoggedIn, upload.single('dpimage'), async function(req, res, next) {
+router.post('/uploaddp', isLoggedIn, uploaddp.single('dpimage'), async function(req, res, next) {
   const user = await userSchema.findOne({username : req.session.passport.user});
-  user.dp = req.file.filename;
+  user.dp = req.file.path;
   await user.save();
   res.redirect('/profile');
 });
 
 
-router.post('/createpin', isLoggedIn, upload.single('pinimage'), async function(req, res, next) {
+router.post('/createpin', isLoggedIn, uploadpin.single('pinimage'), async function(req, res, next) {
   const user = await userSchema.findOne({username : req.session.passport.user});
   const newpin = await pinSchema.create({
-    pinimage: req.file.filename,
+    pinimage: req.file.path,
     pintitle: req.body.pintitle,
     pindescription: req.body.pindescription,
     user: user._id,
+    tags : req.body.tags.split(','),
     link: req.body.link,
   })
   user.pins.push(newpin._id);
   await user.save();
-  res.send('pin created');
+  res.redirect('/feed');
 });
 
 

@@ -14,6 +14,7 @@ const pinSchema = new mongoose.Schema({
     tags : [{
         type : String,
         trim : true,
+        lowercase : true,
     }],
     link : String,
 

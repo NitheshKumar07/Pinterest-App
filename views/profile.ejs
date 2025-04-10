@@ -11,7 +11,7 @@
         <div class="relative">
             <span id="dppencil" class="cursor-pointer bg-zinc-200 absolute bottom-0 right-1 w-9 h-9 rounded-full flex justify-center items-center"><svg class="text-zinc-800 h-[60%] w-[60%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.8995 6.85453L17.1421 11.0972L7.24264 20.9967H3V16.754L12.8995 6.85453ZM14.3137 5.44032L16.435 3.319C16.8256 2.92848 17.4587 2.92848 17.8492 3.319L20.6777 6.14743C21.0682 6.53795 21.0682 7.17112 20.6777 7.56164L18.5563 9.68296L14.3137 5.44032Z"></path></svg></span>
             <div class="bg-green-500 h-36 w-36 rounded-full overflow-hidden">
-                <img class="w-full h-full object-cover" src="/images/uploads/<%= user.dp %>" alt="profile pic"></div>
+                <img class="w-full h-full object-cover" src="<%= user.dp %>" alt="profile pic"></div>
         </div>
         <h1 class=" capitalize mt-3 font-semibold text-3xl sm:text-4xl text-center"><%= user.fullname %></h1>
         <h4 class="font-medium text-gray-600 text-md">@<%= user.username %></h4>
@@ -41,7 +41,7 @@
             <% } %>
             <% user.pins.forEach(pin => { %>
                 <div class="card w-full sm:w-1/4 md:w-1/5 lg:w-1/6">
-                    <div class=" w-full sm:h-44 h-48  bg-black rounded-2xl overflow-hidden"><img class=" object-cover object-center w-full h-full" src="/images/uploads/<%= pin.pinimage %>" alt=""></div>
+                    <div class=" w-full sm:h-44 h-48  bg-black rounded-2xl overflow-hidden"><img class=" object-cover object-center w-full h-full" src="<%= pin.pinimage %>" alt=""></div>
                     <h2 class="text-xl font-semibold capitalize mt-3"><%= pin.pintitle %></h2>
                     <!-- <p class="text-sm  font-medium opacity-70">20 pins</p> -->
                 </div>

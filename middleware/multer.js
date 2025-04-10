@@ -1,17 +1,31 @@
 const multer = require('multer');
 const {v4 : uuidv4} = require('uuid');
 const path = require('path');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary')
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './public/images/uploads');
-    },
-    filename: function (req, file, cb) {
-      const uniquename = uuidv4() ;
-      cb(null, uniquename+path.extname(file.originalname));
+const dpstorage = new CloudinaryStorage({
+  
+    cloudinary : cloudinary,
+    params : {
+      folder : 'userDps',
+      allowed_formats : ['jpg', 'jpeg', 'png', 'webp']
     }
+
+  })
+    
+  const uploaddp = multer({ storage : dpstorage });
+
+  const pinstorage = new CloudinaryStorage({
+
+    cloudinary : cloudinary,
+    params : {
+      folder : 'pins' ,
+      allowed_formats : ['jpg', 'jpeg', 'png', 'webp']
+    }
+
   })
   
-  const upload = multer({ storage: storage });
+  const uploadpin = multer({ storage : pinstorage });
 
-  module.exports = upload;
+  module.exports = {uploaddp, uploadpin};
